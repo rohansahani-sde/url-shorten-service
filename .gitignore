@@ -1,0 +1,33 @@
+# =====================
+# Backend
+# =====================
+/backend/node_modules/
+# Logs
+/backend/logs
+/backend/*.log
+/backend/npm-debug.log*
+# Environment variables
+/backend/.env
+# Sensitive files
+backend/src/serviceAccountKey.json
+# Optional build folder
+#/backend/dist/
+#/backend/build/
+
+# =====================
+# Frontend
+# =====================
+/frontend/node_modules/
+/frontend/build/
+# Environment variables
+/frontend/.env
+# Logs
+/frontend/logs
+/frontend/*.log*
+
+# =====================
+# OS / IDE files
+# =====================
+.DS_Store
+Thumbs.db
+.vscode/
