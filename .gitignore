@@ -21,6 +21,7 @@ backend/src/serviceAccountKey.json
 /frontend/build/
 # Environment variables
 /frontend/.env
+/frontend/src/components/fireBase/firebase.js
 # Logs
 /frontend/logs
 /frontend/*.log*
