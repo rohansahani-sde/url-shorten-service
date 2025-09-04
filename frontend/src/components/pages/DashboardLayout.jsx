@@ -19,6 +19,12 @@ export default function DashboardLayout() {
 
         <nav className="flex-1 p-4 space-y-3">
           <Link
+            to="/dashboard"
+            className="block px-4 py-2 rounded hover:bg-[#2C363F] transition"
+          >
+            📊 Dashboard
+          </Link>
+          <Link
             to="/me"
             className="block px-4 py-2 rounded hover:bg-[#2C363F] transition"
           >

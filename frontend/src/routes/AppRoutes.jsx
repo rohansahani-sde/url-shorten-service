@@ -22,7 +22,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/dashboard" element={  <Dashboard />  } />
+        {/* <Route path="/dashboard" element={  <Dashboard />  } /> */}
 
         {/* FireBase Auth  */}
         {/* <Route path="/login" element={  <Login />  } /> */}
@@ -40,6 +40,7 @@ export default function AppRoutes() {
         {/* demo Routes  */}
         <Route element={<Protectedroute><DashboardLayout /></Protectedroute>}>
         <Route path="/me" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/edit" element={<EditProfile />} />
         <Route path="/urls" element={<UrlList />} />
         <Route path="/urls/create" element={<UrlCreate />} />
