@@ -167,48 +167,101 @@ const getProfile = async (req, res) => {
  * Update user profile
  * @route PUT /api/auth/profile
  */
+// const updateProfile = async (req, res) => {
+//   try {
+//     const { username, email } = req.body;
+//     const userId = req.user._id;
+
+//     const updateData = {};
+
+//     // Validate and add username if provided
+//     if (username) {
+//       if (username.length < 3 || username.length > 30) {
+//         return res.status(400).json({ message: 'Username must be between 3 and 30 characters' });
+//       }
+      
+//       // Check if username is already taken
+//       const existingUser = await User.findOne({ username, _id: { $ne: userId } });
+//       if (existingUser) {
+//         return res.status(400).json({ message: 'Username already taken' });
+//       }
+      
+//       updateData.username = username;
+//     }
+
+//     // Validate and add email if provided
+//     if (email) {
+//       if (!validator.isEmail(email)) {
+//         return res.status(400).json({ message: 'Please provide a valid email' });
+//       }
+      
+//       // Check if email is already taken
+//       const existingUser = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } });
+//       if (existingUser) {
+//         return res.status(400).json({ message: 'Email already taken' });
+//       }
+      
+//       updateData.email = email.toLowerCase();
+//     }
+
+//     if (Object.keys(updateData).length === 0) {
+//       return res.status(400).json({ message: 'No valid fields to update' });
+//     }
+
+//     // Update user
+//     const user = await User.findByIdAndUpdate(
+//       userId,
+//       updateData,
+//       { new: true, runValidators: true }
+//     );
+
+//     res.json({
+//       success: true,
+//       message: 'Profile updated successfully',
+//       user: {
+//         id: user._id,
+//         username: user.username,
+//         email: user.email,
+//         urlCount: user.urlCount,
+//         lastLogin: user.lastLogin,
+//         createdAt: user.createdAt
+//       }
+//     });
+
+//   } catch (error) {
+//     console.error('Profile update error:', error);
+//     res.status(500).json({ message: 'Server error updating profile' });
+//   }
+// };
 const updateProfile = async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { username, email, name, profilePic } = req.body;  // include new fields
     const userId = req.user._id;
 
     const updateData = {};
 
-    // Validate and add username if provided
     if (username) {
-      if (username.length < 3 || username.length > 30) {
-        return res.status(400).json({ message: 'Username must be between 3 and 30 characters' });
-      }
-      
-      // Check if username is already taken
-      const existingUser = await User.findOne({ username, _id: { $ne: userId } });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Username already taken' });
-      }
-      
+      // ...username validations
       updateData.username = username;
     }
 
-    // Validate and add email if provided
     if (email) {
-      if (!validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Please provide a valid email' });
-      }
-      
-      // Check if email is already taken
-      const existingUser = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Email already taken' });
-      }
-      
+      // ...email validations
       updateData.email = email.toLowerCase();
+    }
+
+    if (name) {
+      updateData.name = name;
+    }
+
+    if (profilePic) {
+      updateData.profilePic = profilePic;
     }
 
     if (Object.keys(updateData).length === 0) {
       return res.status(400).json({ message: 'No valid fields to update' });
     }
 
-    // Update user
     const user = await User.findByIdAndUpdate(
       userId,
       updateData,
@@ -220,8 +273,10 @@ const updateProfile = async (req, res) => {
       message: 'Profile updated successfully',
       user: {
         id: user._id,
+        name: user.name,
         username: user.username,
         email: user.email,
+        profilePic: user.profilePic,
         urlCount: user.urlCount,
         lastLogin: user.lastLogin,
         createdAt: user.createdAt
@@ -233,6 +288,8 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error updating profile' });
   }
 };
+
+
 
 /**
  * Change password

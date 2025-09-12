@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetchMe();
-  }, []);
+  }, []); 
 
   return (
     <AuthContext.Provider value={{ user, setUser, fetchMe }}>

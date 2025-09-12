@@ -25,12 +25,14 @@ export default function AppRoutes() {
         {/* <Route path="/dashboard" element={  <Dashboard />  } /> */}
 
         {/* FireBase Auth  */}
+        <Route path="/login" element={ <PublicRoute> <Login /> </PublicRoute> } />
+        <Route path="/register" element={<PublicRoute> <Register /> </PublicRoute>} />
         {/* <Route path="/login" element={  <Login />  } /> */}
-        <Route path="/register" element={ <Register />} />
+        {/* <Route path="/register" element={ <Register />} /> */}
 
 
         {/*  public routes */}
-        <Route path="/login" element={ <PublicRoute> <Login /> </PublicRoute> } />
+        {/* <Route path="/login" element={ <PublicRoute> <Login /> </PublicRoute> } /> */}
         {/* <Route path="/register" element={<PublicRoute> <Register /> </PublicRoute>} /> */}
 
         <Route path="/urlshort" element={<PublicRoute> <UrlShortener /> </PublicRoute>} />

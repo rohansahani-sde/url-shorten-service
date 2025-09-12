@@ -27,6 +27,8 @@ const AnalyticsPage = () => {
     if (shortCode) fetchAnalytics();
   }, [shortCode]);
 
+  console.log(analytics)
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#2C363F] text-[#29ABE2] font-semibold">
@@ -46,7 +48,8 @@ const AnalyticsPage = () => {
       </div>
     );
 
-  const { url, period, stats, charts } = analytics;
+  const { url, period, stats, charts, urlAnalytics } = analytics;
+
 
   return (
     <div className="min-h-screen p-8 bg-[#2C363F] text-white">
@@ -99,6 +102,8 @@ const AnalyticsPage = () => {
             <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
               <p className="text-gray-400 text-sm">Devices</p>
               <p className="font-bold text-lg">{stats.uniqueDevices}</p>
+              {/* <p className="font-bold text-lg">{urlAnalytics.os.name}</p> */}
+
             </div>
             <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
               <p className="text-gray-400 text-sm">Countries</p>

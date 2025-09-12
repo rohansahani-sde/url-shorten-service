@@ -15,7 +15,6 @@ export default function Profile() {
         const res = await axios.get("/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(res.data.user.photoURL)
         setUser(res.data.user);
       } catch (err) {
         console.error("Error fetching profile", err);
@@ -24,67 +23,91 @@ export default function Profile() {
     fetchProfile();
   }, []);
 
+  console.log(user)
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-white">
-        <p>Loading profile...</p>
+      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0F] text-gray-300">
+        <p className="animate-pulse">Loading profile...</p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 text-white">
-      {/* Profile Card */}
-      <div className="bg-[#1E242B] rounded-xl p-6 shadow-lg flex flex-col items-center">
-        <div className="relative">
-          <div className="h-24 w-24 rounded-full border-4 border-[#29ABE2] overflow-hidden bg-[#2C363F] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0A0A0F] text-gray-100">
+      {/* Header Banner */}
+      <div className="h-40 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
+        <div className="absolute bottom-0 left-8 transform translate-y-1/2">
+          <div className="h-28 w-28 rounded-full border-4 border-white overflow-hidden shadow-xl">
             {user.photoURL ? (
               <img
-                src={user?.photoURL}
+                src={user.photoURL}
                 alt={user.name}
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="text-3xl font-bold text-[#29ABE2]">
+              <div className="h-full w-full bg-indigo-500 flex items-center justify-center text-3xl font-bold">
                 {user.name?.charAt(0) || "U"}
-              </span>
+              </div>
             )}
           </div>
         </div>
-        <h2 className="text-2xl font-semibold mt-4">{user.name}</h2>
-        <p className="text-gray-400">@{user.username}</p>
-        <p className="text-gray-300">{user.email}</p>
-        <a
-          href="/edit"
-          className="mt-4 bg-[#29ABE2] text-black px-4 py-2 rounded-lg shadow hover:bg-[#1d91c0]"
+        <button
+          onClick={() => (window.location.href = "/edit")}
+          className="absolute top-4 right-6 flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-lg hover:bg-white/30 transition"
         >
-          Edit Profile
-        </a>
+          ✏️ Edit Profile
+        </button>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-        <div className="bg-[#1E242B] rounded-lg p-6 text-center shadow-lg">
-          <p className="text-sm text-gray-400">Total URLs</p>
-          <h3 className="text-2xl font-bold text-[#29ABE2]">
-            {user.urlCount || 0}
-          </h3>
+      {/* Content */}
+      <div className="px-8 mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left - User Info */}
+        <div className="lg:col-span-1">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/10">
+            <h2 className="text-2xl font-bold">{user.name}</h2>
+            <p className="text-gray-400">@{user.username}</p>
+            <p className="text-gray-300 mt-2">{user.email}</p>
+          </div>
         </div>
-        <div className="bg-[#1E242B] rounded-lg p-6 text-center shadow-lg">
-          <p className="text-sm text-gray-400">Last Login</p>
-          <h3 className="text-lg font-semibold">
-            {user.lastLogin
-              ? new Date(user.lastLogin).toLocaleDateString()
-              : "N/A"}
-          </h3>
+
+        {/* Right - Stats */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <StatCard
+              icon="🔗"
+              label="Total URLs"
+              value={user.urlCount || 0}
+            />
+            <StatCard
+              icon="🕒"
+              label="Last Login"
+              value={
+                user.lastLogin
+                  ? new Date(user.lastLogin).toLocaleDateString()
+                  : "N/A"
+              }
+            />
+            <StatCard
+              icon="📅"
+              label="Joined"
+              value={new Date(user.createdAt).toLocaleDateString()}
+            />
+          </div>
         </div>
-        <div className="bg-[#1E242B] rounded-lg p-6 text-center shadow-lg">
-          <p className="text-sm text-gray-400">Joined</p>
-          <h3 className="text-lg font-semibold">
-            {new Date(user.createdAt).toLocaleDateString()}
-          </h3>
-        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Reusable Stat Card */
+function StatCard({ icon, label, value }) {
+  return (
+    <div className="flex items-center gap-4 bg-white/5 backdrop-blur-lg rounded-xl p-5 shadow-lg border border-white/10 hover:scale-105 transition">
+      <div className="p-3 rounded-lg bg-white/10 text-xl">{icon}</div>
+      <div>
+        <p className="text-sm text-gray-400">{label}</p>
+        <h3 className="text-lg font-semibold">{value}</h3>
       </div>
     </div>
   );

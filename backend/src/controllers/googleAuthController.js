@@ -1,10 +1,7 @@
 const admin = require("../firebaseAdmin");
 const User = require("../models/User");
 const jwt = require('jsonwebtoken');
-// const { generateToken } = require("../utils/jwt");
-// const admin = require("firebase-admin");
-// const User = require("../models/User");
-// const jwt = require("jsonwebtoken");
+
 
 const generateToken = (id) => {
   return jwt.sign({ userId: id }, process.env.JWT_SECRET, {

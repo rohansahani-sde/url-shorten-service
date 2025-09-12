@@ -15,6 +15,7 @@ const getUrlAnalytics = async (req, res) => {
     
     // Find URL and verify ownership
     const url = await Url.findOne({ shortCode, owner: userId });
+    const urlAnalytics = await Analytics.findOne({ shortCode:shortCode  });
     
     if (!url) {
       return res.status(404).json({ message: 'URL not found or access denied' });
@@ -68,7 +69,9 @@ const getUrlAnalytics = async (req, res) => {
         browsers: browserStats,
         locations: locationStats,
         referrers: referrerStats
-      }
+      },
+      urlAnalytics: urlAnalytics,
+      
     };
 
     // Cache the results
@@ -99,7 +102,7 @@ const getDashboardAnalytics = async (req, res) => {
 
     // Get user's URLs
     const userUrls = await Url.find({ owner: userId }).select('_id shortCode originalUrl clickCount');
-    console.log(userUrls)
+    // console.log(userUrls)
 
     if (userUrls.length === 0) {
       return res.json({

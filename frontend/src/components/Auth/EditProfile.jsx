@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile() {
   const [form, setForm] = useState({ name: "", username: "", profilePic: "" });
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -47,13 +50,15 @@ export default function EditProfile() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMsg(res.data.message || "Profile updated ✅");
-      // reflect any server-normalized values
+
       const u = res.data.user || {};
       setForm({
         name: u.name || "",
         username: u.username || "",
         profilePic: u.profilePic || "",
       });
+
+      setTimeout(() => navigate("/me"), 1200);
     } catch (e) {
       setMsg(e.response?.data?.message || "Update failed");
     }
@@ -61,94 +66,93 @@ export default function EditProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen grid place-items-center bg-[#2C363F] text-white">
-        Loading profile...
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300">
+        <p className="animate-pulse text-lg font-medium">Loading profile...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#2C363F] text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-lg bg-[#1E242B] border border-gray-700 rounded-2xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="w-full max-w-md bg-gray-900 border border-gray-700 rounded-3xl shadow-xl p-8 space-y-6">
+        <h2 className="text-3xl font-bold text-center text-indigo-400">Edit Profile</h2>
 
         {msg && (
           <div
-            className={`mb-4 px-3 py-2 rounded ${
-              /updated|✅/i.test(msg) ? "bg-green-600" : "bg-red-600"
+            className={`text-center px-4 py-2 rounded-lg font-medium ${
+              /updated|✅/i.test(msg)
+                ? "bg-green-600/80 text-green-50"
+                : "bg-red-600/80 text-red-50"
             }`}
           >
             {msg}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Profile picture preview */}
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-[#29ABE2] bg-[#2C363F] grid place-items-center">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Profile Pic */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-indigo-500 shadow-lg bg-gray-800 grid place-items-center">
               {form.profilePic ? (
                 <img
                   src={form.profilePic}
-                  alt="preview"
-                  className="h-full w-full object-cover"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
                   onError={(e) => (e.currentTarget.src = "")}
                 />
               ) : (
-                <span className="text-xl text-[#29ABE2]">
+                <span className="text-3xl font-bold text-indigo-400">
                   {form.name?.[0]?.toUpperCase() || "U"}
                 </span>
               )}
             </div>
-            <div className="flex-1">
-              <label className="block text-sm text-gray-300 mb-1">
-                Profile Picture URL
-              </label>
-              <input
-                type="url"
-                name="profilePic"
-                placeholder="https://..."
-                value={form.profilePic}
-                onChange={handleChange}
-                className="w-full px-3 py-2 rounded-lg bg-[#11161b] border border-gray-700 text-white outline-none focus:ring-2 focus:ring-[#29ABE2]"
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                Paste a direct image URL (PNG/JPG).
-              </p>
-            </div>
+            <input
+              type="url"
+              name="profilePic"
+              value={form.profilePic}
+              onChange={handleChange}
+              placeholder="Profile Picture URL"
+              className="w-full px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            />
           </div>
 
-          <div>
-            <label className="block text-sm text-gray-300 mb-1">Full Name</label>
+          {/* Name */}
+          <div className="flex flex-col">
+            <label className="text-gray-400 mb-1">Full Name</label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg bg-[#11161b] border border-gray-700 text-white outline-none focus:ring-2 focus:ring-[#29ABE2]"
+              placeholder="John Doe"
+              className="w-full px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white outline-none focus:ring-2 focus:ring-indigo-400 transition"
               required
             />
           </div>
 
-          <div>
-            <label className="block text-sm text-gray-300 mb-1">Username</label>
+          {/* Username */}
+          <div className="flex flex-col">
+            <label className="text-gray-400 mb-1">Username</label>
             <input
               type="text"
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg bg-[#11161b] border border-gray-700 text-white outline-none focus:ring-2 focus:ring-[#29ABE2]"
+              placeholder="johndoe"
+              className="w-full px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-white outline-none focus:ring-2 focus:ring-indigo-400 transition"
               minLength={3}
               maxLength={30}
               required
             />
             <p className="text-xs text-gray-500 mt-1">
-              3–30 chars, unique across users.
+              3–30 characters, must be unique.
             </p>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full mt-2 bg-[#29ABE2] text-black font-semibold py-2.5 rounded-lg hover:bg-[#1d91c0] transition"
+            className="w-full py-3 rounded-xl bg-indigo-500 text-black font-semibold text-lg hover:bg-indigo-600 transition shadow-md"
           >
             Save Changes
           </button>
