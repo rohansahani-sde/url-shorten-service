@@ -23,8 +23,6 @@ export default function Profile() {
     fetchProfile();
   }, []);
 
-  console.log(user)
-
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A0A0F] text-gray-300">
@@ -38,7 +36,7 @@ export default function Profile() {
       {/* Header Banner */}
       <div className="h-40 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
         <div className="absolute bottom-0 left-8 transform translate-y-1/2">
-          <div className="h-28 w-28 rounded-full border-4 border-white overflow-hidden shadow-xl">
+          <div className="h-36 w-36 rounded-full border-4 border-white overflow-hidden shadow-xl">
             {user.photoURL ? (
               <img
                 src={user.photoURL}

@@ -2,7 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../api/axios";
 
-const AnalyticsPage = () => {
+const StatCard = ({ title, value }) => (
+  <div className="bg-[#1e293b] p-6 rounded-xl shadow hover:shadow-lg transition">
+    <p className="text-gray-400 text-sm">{title}</p>
+    <p className="text-2xl font-bold text-[#38bdf8]">{value}</p>
+  </div>
+);
+
+const ChartCard = ({ title, children }) => (
+  <div className="bg-[#1e293b] p-6 rounded-xl shadow space-y-4">
+    <h3 className="text-lg font-semibold text-[#38bdf8]">{title}</h3>
+    {children}
+  </div>
+);
+
+export default function AnalyticsPage() {
   const navigate = useNavigate();
   const { shortCode } = useParams();
   const [analytics, setAnalytics] = useState(null);
@@ -27,126 +41,141 @@ const AnalyticsPage = () => {
     if (shortCode) fetchAnalytics();
   }, [shortCode]);
 
-  console.log(analytics)
-
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#2C363F] text-[#29ABE2] font-semibold">
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-[#38bdf8] font-semibold">
         Loading analytics...
       </div>
     );
   if (error)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#2C363F] text-red-500 font-semibold">
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-red-500 font-semibold">
         {error}
       </div>
     );
   if (!analytics)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#2C363F] text-gray-400 font-medium">
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-gray-400 font-medium">
         No analytics found.
       </div>
     );
 
-  const { url, period, stats, charts, urlAnalytics } = analytics;
-
+  const { url, period, stats, charts } = analytics;
 
   return (
-    <div className="min-h-screen p-8 bg-[#2C363F] text-white">
-      <div className="max-w-5xl mx-auto bg-[#1E242B] rounded-xl shadow-lg p-8 border border-gray-700">
-        <h2 className="text-3xl font-bold mb-4 text-[#29ABE2]">
-          Analytics for <span className="text-white">{url.shortCode}</span>
-        </h2>
-
-        <div className="space-y-2 mb-6 text-gray-300">
-          <p>
-            <strong className="text-[#29ABE2]">Original URL:</strong>{" "}
+    <div className="min-h-screen bg-[#0f172a] text-white p-8">
+      <div className="max-w-6xl mx-auto space-y-10">
+        
+        {/* Header */}
+        <div className="bg-[#1e293b] p-6 rounded-2xl shadow flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold text-[#38bdf8]">
+              Analytics Report
+            </h2>
             <a
-            href={url.originalUrl}
-            target="_blank"
-            rel="noreferrer"
-            title={url.originalUrl} // tooltip on hover
-            className="underline text-[#29ABE2] hover:text-[#1d91c0] block max-w-full truncate"
+              href={url.originalUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-gray-400 hover:underline block truncate max-w-md"
+              title={url.originalUrl}
             >
               {url.originalUrl}
             </a>
-
-          </p>
-          <p>
-            <strong className="text-[#29ABE2]">Total Clicks:</strong>{" "}
-            {url.totalClicks}
-          </p>
-          <p>
-            <strong className="text-[#29ABE2]">Period:</strong>{" "}
-            {new Date(period.startDate).toLocaleDateString()} →{" "}
-            {new Date(period.endDate).toLocaleDateString()}
-          </p>
-        </div>
-
-        <hr className="border-gray-700 my-6" />
-
-        {/* Stats Summary */}
-        <section className="mb-6">
-          <h3 className="text-xl font-semibold mb-2 text-[#29ABE2]">
-            📊 Stats Summary
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
-              <p className="text-gray-400 text-sm">Total Clicks</p>
-              <p className="font-bold text-lg">{stats.totalClicks}</p>
-            </div>
-            <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
-              <p className="text-gray-400 text-sm">Unique Clicks</p>
-              <p className="font-bold text-lg">{stats.uniqueClicks}</p>
-            </div>
-            <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
-              <p className="text-gray-400 text-sm">Devices</p>
-              <p className="font-bold text-lg">{stats.uniqueDevices}</p>
-              {/* <p className="font-bold text-lg">{urlAnalytics.os.name}</p> */}
-
-            </div>
-            <div className="bg-[#2C363F] p-4 rounded-lg shadow text-center">
-              <p className="text-gray-400 text-sm">Countries</p>
-              <p className="font-bold text-lg">{stats.uniqueCountries}</p>
-            </div>
           </div>
-        </section>
-
-        {/* Analytics Sections */}
-        <div className="space-y-6">
-          {[
-            { key: "dailyClicks", title: "📅 Daily Clicks", label: (item) => `${item.date}: ${item.clicks} clicks, ${item.uniqueClicks} unique` },
-            { key: "devices", title: "🖥️ Devices", label: (item) => `${item.device}: ${item.count} clicks (${item.percentage}%)` },
-            { key: "browsers", title: "🌐 Browsers", label: (item) => `${item.browser}: ${item.count}` },
-            { key: "locations", title: "📍 Locations", label: (item) => `${item.country}: ${item.count}` },
-            { key: "referrers", title: "🔗 Referrers", label: (item) => `${item.source || "Direct"}: ${item.count}` },
-          ].map(({ key, title, label }) => (
-            <section key={key}>
-              <h3 className="text-xl font-semibold mb-2 text-[#29ABE2]">
-                {title}
-              </h3>
-              {charts[key]?.length > 0 ? (
-                <ul className="space-y-1 text-gray-300">
-                  {charts[key].map((item, idx) => (
-                    <li key={idx}>{label(item)}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">No {key} data available.</p>
-              )}
-            </section>
-          ))}
+          <span className="px-3 py-1 bg-[#38bdf8]/20 text-[#38bdf8] rounded-lg text-sm">
+            {url.shortCode}
+          </span>
         </div>
 
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <StatCard title="Total Clicks" value={stats.totalClicks} />
+          <StatCard title="Unique Clicks" value={stats.uniqueClicks} />
+          <StatCard title="Devices" value={stats.uniqueDevices} />
+          <StatCard title="Countries" value={stats.uniqueCountries} />
+        </div>
+
+        {/* Charts area */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <ChartCard title="📅 Daily Clicks">
+            {charts.dailyClicks?.length ? (
+              <ul className="space-y-1 text-gray-300 text-sm">
+                {charts.dailyClicks.map((d, i) => (
+                  <li key={i}>
+                    {d.date}: {d.clicks} clicks ({d.uniqueClicks} unique)
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No daily data.</p>
+            )}
+          </ChartCard>
+
+          <ChartCard title="🖥️ Devices">
+            {charts.devices?.length ? (
+              <ul className="space-y-1 text-gray-300 text-sm">
+                {charts.devices.map((d, i) => (
+                  <li key={i}>
+                    {d.device}: {d.count} ({d.percentage}%)
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No device data.</p>
+            )}
+          </ChartCard>
+
+          <ChartCard title="🌐 Browsers">
+            {charts.browsers?.length ? (
+              <ul className="space-y-1 text-gray-300 text-sm">
+                {charts.browsers.map((b, i) => (
+                  <li key={i}>
+                    {b.browser}: {b.count}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No browser data.</p>
+            )}
+          </ChartCard>
+
+          <ChartCard title="📍 Locations">
+            {charts.locations?.length ? (
+              <ul className="space-y-1 text-gray-300 text-sm">
+                {charts.locations.map((l, i) => (
+                  <li key={i}>
+                    {l.country}: {l.count}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No location data.</p>
+            )}
+          </ChartCard>
+
+          <ChartCard title="🔗 Referrers">
+            {charts.referrers?.length ? (
+              <ul className="space-y-1 text-gray-300 text-sm">
+                {charts.referrers.map((r, i) => (
+                  <li key={i}>
+                    {r.source || "Direct"}: {r.count}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No referrer data.</p>
+            )}
+          </ChartCard>
+        </div>
+
+        {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="mt-6 bg-[#29ABE2] hover:bg-[#1d91c0] text-black font-bold py-2 px-6 rounded-lg shadow transition"
+          className="bottom-6 left-6 bg-[#38bdf8] hover:bg-[#0ea5e9] text-black font-bold py-2 px-6 rounded-full shadow-lg transition"
         >
-          Back to Dashboard
+          ← Back
         </button>
       </div>
     </div>
   );
-};
-
-export default AnalyticsPage;
+}
