@@ -4,6 +4,24 @@ A robust and user-friendly URL Shortener service that transforms long URLs into 
 
 ---
 
+## ✨ Features  
+- 🔗 **Shorten Long URLs** into simple and shareable links  
+- 📊 **Track clicks and analytics** for shortened URLs  
+- 🧾 **Manage and view all shortened URLs** in a clean dashboard  
+- 👤 **User authentication** (Signup/Login/Profile)  
+- 📱 **Responsive design** for desktop & mobile  
+- 📷 **QR Code generation** for easy sharing  
+
+---
+
+## 🛠️ Tech Stack  
+- **Frontend:** React.js + Tailwind CSS  
+- **Backend:** Node.js + Express.js  
+- **Database:** MongoDB  
+- **Other Tools:** Axios, JWT Authentication  
+
+---
+
 ## 🎥 Demo Video  
 
 [![Watch the Demo](https://github.com/user-attachments/assets/4aefd566-4069-4583-b26a-87fdbb520d78)](https://drive.google.com/file/d/1-s_-oIIt3w5nkEPj4h-SmfkpysNHAi99/view)
@@ -47,21 +65,7 @@ A robust and user-friendly URL Shortener service that transforms long URLs into 
 
 ---
 
-## ✨ Features  
-- 🔗 **Shorten Long URLs** into simple and shareable links  
-- 📊 **Track clicks and analytics** for shortened URLs  
-- 🧾 **Manage and view all shortened URLs** in a clean dashboard  
-- 👤 **User authentication** (Signup/Login/Profile)  
-- 📱 **Responsive design** for desktop & mobile  
-- 📷 **QR Code generation** for easy sharing  
 
----
-
-## 🛠️ Tech Stack  
-- **Frontend:** React.js + Tailwind CSS  
-- **Backend:** Node.js + Express.js  
-- **Database:** MongoDB  
-- **Other Tools:** Axios, JWT Authentication  
 
 ---
 
@@ -69,7 +73,7 @@ A robust and user-friendly URL Shortener service that transforms long URLs into 
 
 ### 1️⃣ Clone the Repository  
 ```bash
-git clone https://github.com/your-username/url-shorten-service.git
+git clone https://github.com/rohansahani-sde/url-shorten-service
 cd url-shorten-service
 
 ```
@@ -111,4 +115,5 @@ cd frontend
 npm run dev
 
 ```
+
 
