@@ -4,6 +4,14 @@ A robust and user-friendly URL Shortener service that transforms long URLs into 
 
 ---
 
+## 🎥 Demo Video  
+
+[![Watch the Demo](https://github.com/user-attachments/assets/4aefd566-4069-4583-b26a-87fdbb520d78)](https://drive.google.com/file/d/1-s_-oIIt3w5nkEPj4h-SmfkpysNHAi99/view)
+
+
+
+---
+
 ## 📸 Screenshots  
 
 <img width="1919" height="1079" alt="Dashboard" src="https://github.com/user-attachments/assets/d474ca1a-ba17-450a-add1-895ef6d9cab1" />  
@@ -103,3 +111,4 @@ cd frontend
 npm run dev
 
 ```
+
