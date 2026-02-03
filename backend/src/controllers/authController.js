@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Url = require('../models/Url');
+const Analytics = require('../models/Analytics');
 const validator = require('validator');
 
 /**
@@ -143,6 +145,19 @@ const getProfile = async (req, res) => {
   try {
     // User is already attached by auth middleware
     const user = await User.findById(req.user._id);
+
+    // Calculate total and unique clicks
+    const urlIds = await Url.find({ owner: user._id }).distinct('_id');
+    const [urlStats, uniqueClicks] = await Promise.all([
+      Url.aggregate([
+        { $match: { owner: user._id } },
+        { $group: { _id: null, totalClicks: { $sum: "$clickCount" } } }
+      ]),
+      Analytics.countDocuments({ url: { $in: urlIds }, isUnique: true })
+    ]);
+
+    const totalClicks = urlStats.length > 0 ? urlStats[0].totalClicks : 0;
+
     res.json({
       success: true,
       user: {
@@ -152,8 +167,14 @@ const getProfile = async (req, res) => {
         email: user.email,
         photoURL: user.profilePic,
         urlCount: user.urlCount,
+        totalClicks,
+        uniqueClicks,
         lastLogin: user.lastLogin,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        bio: user.bio,
+        title: user.title,
+        location: user.location,
+        website: user.website
       }
     });
 
@@ -235,28 +256,19 @@ const getProfile = async (req, res) => {
 // };
 const updateProfile = async (req, res) => {
   try {
-    const { username, email, name, profilePic } = req.body;  // include new fields
+    const { username, email, name, photoURL, bio, title, location, website } = req.body;
     const userId = req.user._id;
 
     const updateData = {};
 
-    if (username) {
-      // ...username validations
-      updateData.username = username;
-    }
-
-    if (email) {
-      // ...email validations
-      updateData.email = email.toLowerCase();
-    }
-
-    if (name) {
-      updateData.name = name;
-    }
-
-    if (profilePic) {
-      updateData.profilePic = profilePic;
-    }
+    if (username) updateData.username = username;
+    if (email) updateData.email = email.toLowerCase();
+    if (name) updateData.name = name;
+    if (photoURL !== undefined) updateData.profilePic = photoURL;
+    if (bio !== undefined) updateData.bio = bio;
+    if (title !== undefined) updateData.title = title;
+    if (location !== undefined) updateData.location = location;
+    if (website !== undefined) updateData.website = website;
 
     if (Object.keys(updateData).length === 0) {
       return res.status(400).json({ message: 'No valid fields to update' });
@@ -268,6 +280,18 @@ const updateProfile = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    // Calculate total and unique clicks
+    const urlIds = await Url.find({ owner: user._id }).distinct('_id');
+    const [urlStats, uniqueClicks] = await Promise.all([
+      Url.aggregate([
+        { $match: { owner: user._id } },
+        { $group: { _id: null, totalClicks: { $sum: "$clickCount" } } }
+      ]),
+      Analytics.countDocuments({ url: { $in: urlIds }, isUnique: true })
+    ]);
+
+    const totalClicks = urlStats.length > 0 ? urlStats[0].totalClicks : 0;
+
     res.json({
       success: true,
       message: 'Profile updated successfully',
@@ -276,10 +300,16 @@ const updateProfile = async (req, res) => {
         name: user.name,
         username: user.username,
         email: user.email,
-        profilePic: user.profilePic,
+        photoURL: user.profilePic,
         urlCount: user.urlCount,
+        totalClicks,
+        uniqueClicks,
         lastLogin: user.lastLogin,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        bio: user.bio,
+        title: user.title,
+        location: user.location,
+        website: user.website
       }
     });
 
@@ -318,7 +348,7 @@ const changePassword = async (req, res) => {
 
     // Verify current password
     const isCurrentPasswordValid = await user.correctPassword(currentPassword);
-    
+
     if (!isCurrentPasswordValid) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
