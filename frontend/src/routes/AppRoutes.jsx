@@ -42,7 +42,7 @@ export default function AppRoutes() {
         {/* demo Routes  */}
         <Route element={<Protectedroute><DashboardLayout /></Protectedroute>}>
         <Route path="/me" element={<Profile />} />
-        <Route path="/" element={<Profile />} />
+        {/* <Route path="/" element={<Profile />} /> */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/edit" element={<EditProfile />} />
         <Route path="/urls" element={<UrlList />} />
