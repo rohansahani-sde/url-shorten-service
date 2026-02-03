@@ -52,6 +52,25 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  bio: {
+    type: String,
+    maxlength: [160, 'Bio cannot exceed 160 characters'],
+    default: '',
+  },
+  title: {
+    type: String,
+    maxlength: [100, 'Title cannot exceed 100 characters'],
+    default: '',
+  },
+  location: {
+    type: String,
+    maxlength: [100, 'Location cannot exceed 100 characters'],
+    default: '',
+  },
+  website: {
+    type: String,
+    default: '',
+  },
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

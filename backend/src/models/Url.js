@@ -9,7 +9,7 @@ const urlSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Original URL is required'],
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^https?:\/\/.+/.test(v);
       },
       message: 'Please provide a valid URL with http:// or https://'
@@ -20,6 +20,11 @@ const urlSchema = new mongoose.Schema({
     required: [true, 'Short code is required'],
     unique: true,
     index: true
+  },
+  title: {
+    type: String,
+    trim: true,
+    maxlength: [100, 'Title cannot exceed 100 characters']
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
