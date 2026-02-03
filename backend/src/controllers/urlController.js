@@ -13,7 +13,7 @@ const validator = require('validator');
  */
 const createShortUrl = async (req, res) => {
   try {
-    const { originalUrl, customAlias, description, tags, expiresAt } = req.body;
+    const { originalUrl, customAlias, description, tags, expiresAt, title } = req.body;
     const userId = req.user._id;
 
     // Validate original URL
@@ -61,6 +61,7 @@ const createShortUrl = async (req, res) => {
       shortCode,
       owner: userId,
       customAlias: customAlias || null,
+      title: title?.trim() || null,
       description: description?.trim() || null,
       tags: tags?.map(tag => tag.trim()).filter(tag => tag.length > 0) || [],
       expiresAt: expirationDate
@@ -92,6 +93,7 @@ const createShortUrl = async (req, res) => {
         clickCount: url.clickCount,
         description: url.description,
         tags: url.tags,
+        title: url.title,
         expiresAt: url.expiresAt,
         createdAt: url.createdAt
       }
@@ -120,10 +122,17 @@ const getUserUrls = async (req, res) => {
     const sortBy = req.query.sortBy || 'createdAt';
     const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
     const search = req.query.search;
+    const status = req.query.status;
 
     // Build query
     const query = { owner: userId };
-    
+
+    if (status === 'active') {
+      query.isActive = true;
+    } else if (status === 'inactive') {
+      query.isActive = false;
+    }
+
     if (search) {
       query.$or = [
         { originalUrl: { $regex: search, $options: 'i' } },
@@ -190,6 +199,7 @@ const getUrlById = async (req, res) => {
         clickCount: url.clickCount,
         description: url.description,
         tags: url.tags,
+        title: url.title,
         expiresAt: url.expiresAt,
         isActive: url.isActive,
         createdAt: url.createdAt,
@@ -211,7 +221,7 @@ const updateUrl = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
-    const { description, tags, isActive } = req.body;
+    const { description, tags, isActive, title } = req.body;
 
     const url = await Url.findOne({ _id: id, owner: userId });
 
@@ -221,23 +231,27 @@ const updateUrl = async (req, res) => {
 
     // Build update object
     const updateData = {};
-    
+
     if (description !== undefined) {
       updateData.description = description?.trim() || null;
     }
-    
+
     if (tags !== undefined) {
       updateData.tags = tags?.map(tag => tag.trim()).filter(tag => tag.length > 0) || [];
     }
-    
+
     if (isActive !== undefined) {
       updateData.isActive = Boolean(isActive);
     }
 
+    if (title !== undefined) {
+      updateData.title = title?.trim() || null;
+    }
+
     // Update URL
-    const updatedUrl = await Url.findByIdAndUpdate(id, updateData, { 
-      new: true, 
-      runValidators: true 
+    const updatedUrl = await Url.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true
     });
 
     // Invalidate cache
@@ -254,6 +268,7 @@ const updateUrl = async (req, res) => {
         clickCount: updatedUrl.clickCount,
         description: updatedUrl.description,
         tags: updatedUrl.tags,
+        title: updatedUrl.title,
         expiresAt: updatedUrl.expiresAt,
         isActive: updatedUrl.isActive,
         createdAt: updatedUrl.createdAt,
