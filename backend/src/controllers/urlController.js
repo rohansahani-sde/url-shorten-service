@@ -292,7 +292,7 @@ const deleteUrl = async (req, res) => {
     await User.findByIdAndUpdate(userId, { $inc: { urlCount: -1 } });
 
     // Invalidate cache
-    await redisService.invalidateUrl(url.shortCode);
+    // await redisService.invalidateUrl(url.shortCode);
 
     res.json({
       success: true,

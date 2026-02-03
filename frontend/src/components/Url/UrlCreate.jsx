@@ -43,6 +43,7 @@ export default function UrlCreate() {
       setShortUrl(res.data.url.shortUrl);
       setMessage(res.data.message);
     } catch (err) {
+      
       setMessage(err.response?.data?.message || "Error creating short URL");
     }
   };
