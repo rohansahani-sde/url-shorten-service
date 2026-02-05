@@ -1,34 +1,37 @@
 # =====================
+# General
+# =====================
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =====================
 # Backend
 # =====================
 /backend/node_modules/
-# Logs
-/backend/logs
-/backend/*.log
-/backend/npm-debug.log*
-# Environment variables
+/backend/logs/
 /backend/.env
-# Sensitive files
-backend/src/serviceAccountKey.json
-# Optional build folder
-#/backend/dist/
-#/backend/build/
+/backend/src/serviceAccountKey.json
 
 # =====================
 # Frontend
 # =====================
 /frontend/node_modules/
+/frontend/dist/
 /frontend/build/
-# Environment variables
 /frontend/.env
-# /frontend/src/components/fireBase/firebase.js
-# Logs
-/frontend/logs
-/frontend/*.log*
-
-# =====================
-# OS / IDE files
-# =====================
-.DS_Store
-Thumbs.db
-.vscode/
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local

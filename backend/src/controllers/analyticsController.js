@@ -102,7 +102,7 @@ const getDashboardAnalytics = async (req, res) => {
 
     // Get user's URLs
     const userUrls = await Url.find({ owner: userId }).select('_id shortCode originalUrl clickCount');
-    // console.log(userUrls)
+    
 
     if (userUrls.length === 0) {
       return res.json({

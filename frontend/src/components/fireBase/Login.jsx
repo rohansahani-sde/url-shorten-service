@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      console.log(res.data);
+      // console.log(res.data);
       localStorage.setItem("token", res.data.token);
       navigate("/me");
     } catch (err) {
@@ -33,7 +33,7 @@ const handleGoogleLogin = async () => {
     // Send token to backend
     const res = await axios.post("http://localhost:5000/api/auth/google", { idToken: credential });
 
-    console.log(result.user)
+    // console.log(result.user)
     localStorage.setItem("token", res.data.token);
     navigate("/me");
   } catch (error) {

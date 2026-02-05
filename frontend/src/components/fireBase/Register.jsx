@@ -36,7 +36,7 @@ export default function Register() {
         idToken,
       });
 
-      console.log("Google Register response:", res.data);
+      // console.log("Google Register response:", res.data);
       // Save token to localStorage or context
       navigate("/me");
       localStorage.setItem("token", res.data.token);
