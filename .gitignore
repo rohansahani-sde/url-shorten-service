@@ -5,7 +5,8 @@
 frontend/.env
 frontend/.env.local
 frontend/.env.production
-
+serviceAccountKey.json
+backend/src/serviceAccountKey.json
 # =====================
 # General
 # =====================
