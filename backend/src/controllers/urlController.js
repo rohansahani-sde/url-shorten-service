@@ -30,8 +30,8 @@ const createShortUrl = async (req, res) => {
     // Handle custom alias
     if (customAlias) {
       if (!validateCustomAlias(customAlias)) {
-        return res.status(400).json({ 
-          message: 'Custom alias must be 3-20 characters long and contain only letters, numbers, hyphens, and underscores' 
+        return res.status(400).json({
+          message: 'Custom alias must be 3-20 characters long and contain only letters, numbers, hyphens, and underscores'
         });
       }
 
@@ -101,12 +101,12 @@ const createShortUrl = async (req, res) => {
 
   } catch (error) {
     console.error('Create URL error:', error);
-    res.status(500).json({ 
-      message: 'Server error creating short URL' ,
+    res.status(500).json({
+      message: 'Server error creating short URL',
       error: error.message,   // 👈 add this
-    stack: error.stack 
+      stack: error.stack
     });
-    
+
   }
 };
 
@@ -412,27 +412,28 @@ const deleteUrl = async (req, res) => {
 //     res.status(500).json({ message: 'Server error during redirect' });
 //   }
 // };
-const redirectUrl = async (req, res) => {
+const redirectUrl = async (req, res, next) => {
   try {
     const { shortCode } = req.params;
 
     // Atomic update + fetch
     const url = await Url.findOneAndUpdate(
-      { 
-        shortCode, 
-        isActive: true, 
+      {
+        shortCode,
+        isActive: true,
         $or: [
           { expiresAt: null },
           { expiresAt: { $gt: new Date() } }
-          ]
-        },
-        { $inc: { clickCount: 1 } },
-        { new: true }
-      );
+        ]
+      },
+      { $inc: { clickCount: 1 } },
+      { new: true }
+    );
 
 
     if (!url) {
-      return res.status(404).json({ message: "URL not found or inactive" });
+      // If no short URL found, pass to next handler (SPA fallback)
+      return next();
     }
 
     // Parse user agent and IP
@@ -471,6 +472,55 @@ const redirectUrl = async (req, res) => {
 };
 
 
+const createGuestUrl = async (req, res) => {
+  try {
+    // const { originalUrl } = req.body;
+    const originalUrl = req.body.originalUrl?.trim();
+
+    if (!originalUrl) {
+      return res.status(400).json({
+        message: "Original URL is required"
+      });
+    }
+
+    if (
+      !validator.isURL(originalUrl, {
+        require_protocol: true,
+      })
+    ) {
+      return res.status(400).json({
+        message:
+          "Please provide a valid URL with http:// or https://"
+      });
+    }
+
+    const shortCode = await generateShortCode();
+
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000
+    );
+
+    const url = await Url.create({
+      originalUrl: originalUrl.trim(),
+      shortCode,
+      guestLink: true,
+      expiresAt
+    });
+
+    res.status(201).json({
+      success: true,
+      shortUrl: url.shortUrl,
+      expiresAt
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to create guest URL"
+    });
+  }
+};
 
 
 module.exports = {
@@ -479,5 +529,6 @@ module.exports = {
   getUrlById,
   updateUrl,
   deleteUrl,
-  redirectUrl
+  redirectUrl,
+  createGuestUrl
 };

@@ -16,6 +16,7 @@ import Login from "../components/fireBase/Login";
 import Register from "../components/fireBase/Register";
 import DashboardLayout from "../components/pages/DashboardLayout";
 import UpdateUrl from "../components/Url/UpdateUrl";
+import Contact from "../components/pages/Contact";
 
 export default function AppRoutes() {
   return (
@@ -31,11 +32,10 @@ export default function AppRoutes() {
         {/* <Route path="/register" element={ <Register />} /> */}
 
 
-        {/*  public routes */}
-        {/* <Route path="/login" element={ <PublicRoute> <Login /> </PublicRoute> } /> */}
-        {/* <Route path="/register" element={<PublicRoute> <Register /> </PublicRoute>} /> */}
-
-        <Route path="/urlshort" element={<PublicRoute> <UrlShortener /> </PublicRoute>} />
+      {/* Public landing */}
+        {/* <Route path="/" element={<PublicRoute> <Home /> </PublicRoute>} /> */}
+        <Route path="/" element={ <Home /> } />
+        <Route path="/contact" element={<Contact />} />
 
         {/* <Route path="/analytics/:shortCode" element={ <Protectedroute> <AnalyticsPage /> </Protectedroute> } /> */}
 

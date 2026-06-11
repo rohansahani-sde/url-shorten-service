@@ -1,0 +1,6 @@
+- [ ] Diagnose startup crash (`path-to-regexp` Missing parameter name)
+- [ ] Fix redirect route shadowing/route registration order by moving `app.get('/:shortCode', ...)` to the bottom after routers and error handlers (Option A)
+- [ ] Re-run backend (`node backend/server.js`) to confirm it starts successfully
+- [ ] Validate deployment readiness hardening: env validation, CORS behavior, /health endpoint
+- [ ] Ensure backend does not serve frontend/dist (API-only)
+- [ ] Verify redirect route still works for short codes

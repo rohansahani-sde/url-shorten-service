@@ -3,6 +3,11 @@ const Url = require('../models/Url');
 const redisService = require('../services/redisService');
 
 /**
+ * Prevent accidental crashes from route/controller import-time logs.
+ * (Deployment readiness: no side-effects on module load)
+ */
+
+/**
  * Get analytics for a specific URL
  * @route GET /api/analytics/:shortCode
  */

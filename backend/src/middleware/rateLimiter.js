@@ -73,10 +73,22 @@ const apiLimiter = createRateLimiter(15 * 60 * 1000, 1000);
 // const authLimiter = createRateLimiter(15 * 60 * 1000, 10);   // 10 attempts / 15 min
 const authLimiter = createRateLimiter(15 * 60 * 1000, 100);
 
+const guestLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    message:
+      "Guest users can create only 5 links per day"
+  }
+});
+
 module.exports = {
   createRateLimiter,
   userRateLimiter,
   urlCreationLimiter,
   apiLimiter,
-  authLimiter
+  authLimiter,
+  guestLimiter
 };

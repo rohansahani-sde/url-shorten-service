@@ -29,8 +29,13 @@ const urlSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
+    default: null,
     index: true
+  },
+  guestLink: {
+    type: Boolean,
+    default: false
   },
   clickCount: {
     type: Number,
@@ -71,7 +76,8 @@ urlSchema.index({ shortCode: 1, isActive: 1 });
  * Virtual for the full short URL
  */
 urlSchema.virtual('shortUrl').get(function() {
-  return `${process.env.BASE_URL}/${this.shortCode}`;
+  const base = process.env.BASE_URL || 'http://localhost:5000';
+  return `${base}/${this.shortCode}`;
 });
 
 /**

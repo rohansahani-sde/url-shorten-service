@@ -1,0 +1,5 @@
+- [ ] Edit Home.jsx navbar to use AuthContext
+- [ ] Hide Login + Get Started when user is logged in
+- [ ] Show Profile (/me) and Logout instead
+- [ ] Logout clears token + sets user null + redirects to /
+- [ ] Manual test: reload homepage after login

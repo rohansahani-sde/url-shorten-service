@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 
 const UpdateUrl = ({ url, onSuccess, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -55,7 +55,6 @@ const UpdateUrl = ({ url, onSuccess, onCancel }) => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
       const payload = {
         title: formData.title,
         description: formData.description,
@@ -64,9 +63,8 @@ const UpdateUrl = ({ url, onSuccess, onCancel }) => {
       };
 
       const res = await axios.put(
-        `http://localhost:5000/api/urls/${url._id}`,
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
+        `/urls/${url._id}`,
+        payload
       );
 
       setSuccessMsg("✅ Updated successfully!");
@@ -81,8 +79,8 @@ const UpdateUrl = ({ url, onSuccess, onCancel }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-4">
-      <div className="bg-[#1E293B] border border-slate-700/50 rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4" onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div className="bg-[#1E293B] border border-slate-700/50 rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-scale-in">
 
         {/* Decorative Header */}
         <div className="relative h-24 bg-gradient-to-br from-indigo-600 to-purple-700 p-6 flex items-end">

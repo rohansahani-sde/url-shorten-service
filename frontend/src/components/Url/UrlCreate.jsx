@@ -243,42 +243,62 @@ export default function UrlCreate() {
         {/* Success / Result Panel */}
         {shortUrl && (
           <div className="mt-8 bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/20 rounded-[2rem] p-8 animate-fade-in-up">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="p-4 bg-emerald-500/20 rounded-2xl text-emerald-400">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Your link is ready!</h3>
-                  <p className="text-emerald-400/80 font-medium">{shortUrl}</p>
+                  <p className="text-emerald-400/80 font-semibold text-sm">{shortUrl}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <button
                   onClick={handleCopy}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 ${copied ? "bg-emerald-500 text-white shadow-lg" : "bg-white/10 text-white hover:bg-white/20"}`}
+                  className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${copied ? "bg-emerald-500 text-white shadow-lg" : "bg-white/10 text-white hover:bg-white/20"}`}
                 >
                   {copied ? (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
-                      Copied
-                    </>
+                    <><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>Copied</>
                   ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                      Copy Link
-                    </>
+                    <><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>Copy Link</>
                   )}
                 </button>
-                <a
-                  href={shortUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3.5 bg-white/10 text-white hover:bg-white/20 rounded-xl transition"
-                  title="Open Link"
+                <a href={shortUrl} target="_blank" rel="noopener noreferrer"
+                  className="p-3 bg-white/10 text-white hover:bg-white/20 rounded-xl transition" title="Open Link">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>
+                <button
+                  onClick={() => navigate("/urls")}
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-500/25"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  My Links →
+                </button>
+              </div>
+            </div>
+
+            {/* QR Code Preview */}
+            <div className="mt-6 pt-6 border-t border-emerald-500/10 flex flex-col sm:flex-row items-center gap-5">
+              <div className="p-3 bg-white rounded-xl shadow-inner flex-shrink-0">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${shortUrl}`}
+                  alt="QR Code"
+                  className="w-28 h-28"
+                />
+              </div>
+              <div>
+                <p className="text-white font-bold mb-1">QR Code Generated!</p>
+                <p className="text-slate-400 text-sm">Scan this code to open your short link instantly — perfect for print, presentations, and more.</p>
+                <a
+                  href={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${shortUrl}`}
+                  download="qrcode.png"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  Download QR Code
                 </a>
               </div>
             </div>

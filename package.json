@@ -2,20 +2,22 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "dev" : "nodemon backend/server.js",
-    "build" : "npm install && npm install --prefix frontend && npm run build --prefix frontend",
-    "start" : "nodemon backend/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "express-rate-limit": "^8.0.1",
     "firebase-admin": "^13.5.0",
     "helmet": "^8.1.0",
@@ -27,5 +29,8 @@
     "redis": "^5.8.2",
     "user-agent-parser": "^0.6.0",
     "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

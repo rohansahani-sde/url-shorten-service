@@ -1,13 +1,14 @@
 const express = require('express');
 const { authenticate, optionalAuth } = require('../middleware/auth');
-const { apiLimiter, urlCreationLimiter } = require('../middleware/rateLimiter');
+const { apiLimiter, urlCreationLimiter, guestLimiter } = require('../middleware/rateLimiter');
 const {
   createShortUrl,
   getUserUrls,
   getUrlById,
   updateUrl,
   deleteUrl,
-  redirectUrl
+  redirectUrl,
+  createGuestUrl
 } = require('../controllers/urlController');
 
 const router = express.Router();
@@ -46,5 +47,8 @@ router.put('/:id', authenticate, updateUrl);
  * @access  Private
  */
 router.delete('/:id', authenticate, deleteUrl);
+
+// router.post("/guest", urlCreationLimiter, createGuestUrl );
+router.post("/guest", guestLimiter, createGuestUrl );
 
 module.exports = router;
